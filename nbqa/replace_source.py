@@ -54,7 +54,7 @@ def _restore_semicolon(
         for idx, token in tokenize_rt.reversed_enumerate(tokens):
             if not token.src.strip(" \n") or token.name == "COMMENT":
                 continue
-            tokens[idx] = token._replace(src=token.src + ";")
+            tokens[idx] = token._replace(src=f"{token.src};")
             break
         source = tokenize_rt.tokens_to_src(tokens)
     return source

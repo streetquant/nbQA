@@ -141,16 +141,15 @@ def main(  # pylint: disable=R0914
 
             parsed_cell = _parse_cell(cell["source"])
 
-            cell_mapping.update(
-                {
-                    py_line
-                    + index.line_number
-                    + 1: f"cell_{index.cell_number}:{cell_line}"
-                    for py_line, cell_line in _get_line_numbers_for_mapping(
-                        parsed_cell,
-                    ).items()
-                }
-            )
+            cell_mapping |= {
+                py_line
+                + index.line_number
+                + 1: f"cell_{index.cell_number}:{cell_line}"
+                for py_line, cell_line in _get_line_numbers_for_mapping(
+                    parsed_cell,
+                ).items()
+            }
+
             result.append(parsed_cell)
             index = index._replace(
                 line_number=index.line_number + len(parsed_cell.splitlines())

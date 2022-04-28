@@ -410,16 +410,15 @@ def main(  # pylint: disable=R0914
                 dont_skip_bad_cells=dont_skip_bad_cells,
             )
 
-            cell_mapping.update(
-                {
-                    py_line
-                    + index.line_number
-                    + 1: f"cell_{index.cell_number}:{cell_line}"
-                    for py_line, cell_line in _get_line_numbers_for_mapping(
-                        parsed_cell, temporary_lines[index.cell_number]
-                    ).items()
-                }
-            )
+            cell_mapping |= {
+                py_line
+                + index.line_number
+                + 1: f"cell_{index.cell_number}:{cell_line}"
+                for py_line, cell_line in _get_line_numbers_for_mapping(
+                    parsed_cell, temporary_lines[index.cell_number]
+                ).items()
+            }
+
             parsed_cell, trailing_semicolon = _has_trailing_semicolon(parsed_cell)
             if trailing_semicolon:
                 trailing_semicolons.add(index.cell_number)

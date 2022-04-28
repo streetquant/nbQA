@@ -98,12 +98,14 @@ def _get_notebooks(root_dir: str) -> Iterator[Path]:
     notebooks
         All Jupyter Notebooks found in directory.
     """
-    if not os.path.isdir(root_dir):
-        return iter((Path(root_dir),))
     return (
-        i
-        for i in Path(root_dir).rglob("*.ipynb")
-        if not re.search(EXCLUDES, str(i.resolve().as_posix()))
+        (
+            i
+            for i in Path(root_dir).rglob("*.ipynb")
+            if not re.search(EXCLUDES, str(i.resolve().as_posix()))
+        )
+        if os.path.isdir(root_dir)
+        else iter((Path(root_dir),))
     )
 
 
