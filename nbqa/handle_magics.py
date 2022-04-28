@@ -151,23 +151,24 @@ class CellMagicFinder(ast.NodeVisitor):
         AssertionError
             Defensive check.
         """
-        if _is_ipython_magic(node.func):
-            assert isinstance(node.func, ast.Attribute)  # help mypy
-            if node.func.attr == "run_cell_magic":
-                args = []
-                for arg in node.args:
-                    if isinstance(arg, ast.Str):
-                        args.append(arg.s)
-                    else:
-                        raise AssertionError(
-                            "Please report a bug at https://github.com/nbQA-dev/nbQA/issues"
-                        )
-                header: Optional[str] = f"%%{args[0]}"
-                if args[1]:
-                    assert header is not None
-                    header += f" {args[1]}"
-                self.header = header
-                self.body = args[2].rstrip("\n")
+        if not _is_ipython_magic(node.func):
+            return
+        assert isinstance(node.func, ast.Attribute)  # help mypy
+        if node.func.attr == "run_cell_magic":
+            args = []
+            for arg in node.args:
+                if isinstance(arg, ast.Str):
+                    args.append(arg.s)
+                else:
+                    raise AssertionError(
+                        "Please report a bug at https://github.com/nbQA-dev/nbQA/issues"
+                    )
+            header: Optional[str] = f"%%{args[0]}"
+            if args[1]:
+                assert header is not None
+                header += f" {args[1]}"
+            self.header = header
+            self.body = args[2].rstrip("\n")
 
 
 class MagicHandler:
